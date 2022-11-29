@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { DataSource } from "typeorm";
 
 const AppDataSource = new DataSource({
@@ -6,7 +7,16 @@ const AppDataSource = new DataSource({
   port: 5432,
   username: "docker",
   password: "ignite",
-  database: "rentx"
+  database: "rentx",
+  synchronize: false,
+  logging: false,
+  entities: [],
+  migrations: ["./src/database/migrations/*.ts"],
+  subscribers: [],
 });
 
-AppDataSource.initialize();
+export function createConnection(host = "database_ignite"): Promise<DataSource> {
+  return AppDataSource.setOptions({ host }).initialize();
+}
+
+export default AppDataSource;
