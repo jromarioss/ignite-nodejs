@@ -1,9 +1,9 @@
 import { Router } from "express"; // Router para criar as rotas
 import multer from "multer";
 
-import { createCategoryController } from "../modules/cars/useCases/createCategory";
-import { importCategoryController } from "../modules/cars/useCases/importCategory";
-import { listcategoriesController } from "../modules/cars/useCases/listCategories";
+import { CreateCategoryController } from "../modules/cars/useCases/createCategory/CreateCategoryController";
+import { ImportCategoryController } from "../modules/cars/useCases/importCategory/ImportCategoryController";
+import { ListCategoriesController } from "../modules/cars/useCases/listCategories/ListCategoriesController";
 
 const categoriesRoutes = Router(); // criar a Rota categories
 
@@ -12,20 +12,17 @@ const upload = multer({
   dest: "./tmp",
 });
 
+const createCategoryController = new CreateCategoryController();
+const importCategoryController = new ImportCategoryController();
+const listcategoriesController = new ListCategoriesController();
+
 // rota de criar categorias
-categoriesRoutes.post("/", (request, response) => {
-  console.log("oladwadwd")
-  return createCategoryController.handle(request, response);
-});
+categoriesRoutes.post("/", createCategoryController.handle);
 
 // rota de listar categoria
-categoriesRoutes.get("/", (request, response) => {
-  return listcategoriesController.handle(request, response)
-});
+categoriesRoutes.get("/", listcategoriesController.handle);
 
 // rota de upload de arquivo
-categoriesRoutes.post("/import", upload.single("file"), (request, response) => {
-  return importCategoryController.handle(request, response);
-});
+categoriesRoutes.post("/import", upload.single("file"), importCategoryController.handle);
 
 export { categoriesRoutes }; // exporta o categoriesRoutes

@@ -1,49 +1,45 @@
-import { Category } from "../../model/Category";
+import { Category } from "../../entities/Category";
 import { ICategoriesRepository, ICreateCategoryDTO } from "../ICategoriesRepository";
+import { Repository, getRepository } from "typeorm";
 
 // singleton instância de um classe uma instância global
 
 // Responsável por cuidar das funcionalidade ao banco de dados etc
 class CategoriesRepository implements ICategoriesRepository {
 
-  private categories: Category[]; // do tipo array de Category, só o categories tem acesso
+  private repository: Repository<Category>; // acesso só internamente
 
-  private static INSTANCE: CategoriesRepository; // para listar os produtos
+  //private static INSTANCE: CategoriesRepository; // para listar os produtos
 
-  private constructor() {
-    this.categories = []; // aqui que cria o categories
+  constructor() {
+    this.repository = getRepository(Category);
   }
 
-  public static getInstance(): CategoriesRepository {
-    if (!CategoriesRepository.INSTANCE) {
-      CategoriesRepository.INSTANCE = new CategoriesRepository();
-    }
+  // public static getInstance(): CategoriesRepository {
+  //   if (!CategoriesRepository.INSTANCE) {
+  //     CategoriesRepository.INSTANCE = new CategoriesRepository();
+  //   }
+  //   return CategoriesRepository.INSTANCE;
+  // }
 
-    return CategoriesRepository.INSTANCE;
-  }
-
-  create({ name, description}: ICreateCategoryDTO): void { // função sem retorno
-    // new Category chama o constructor no category
-    const category = new Category();
-    
-    // Object assing manda item a item pro category
-    Object.assign(category, {
-      name,
+  async create({ name, description}: ICreateCategoryDTO): Promise<void> { // função sem retorno
+    const category = this.repository.create({
       description,
-      created_at: new Date(),
-    });
+      name,
+    }); // cria a entidade para poder salvar
 
     // manda pro categories name, descrição, uuid
-    this.categories.push(category);
+    await this.repository.save(category)
   }
 
-  list(): Category[] { // função q retorna a lista de Category
-    return this.categories;
+  async list(): Promise<Category[]> { // função q retorna a lista de Category
+    const categories = await this.repository.find(); // retorna uma lista
+    return categories;
   }
 
-  findByName(name: string): Category { // função de verificação de duplicação do name
-    // find percorre o array procurando pelo name e retorna
-    const category = this.categories.find(category => category.name === name);
+  async findByName(name: string): Promise<Category> { // função de verificação de duplicação do name
+    // SELECT * FROM categories WHERE name = "name" LIMIT 1
+    const category = await this.repository.findOne({ name })
     return category;
   }
 }

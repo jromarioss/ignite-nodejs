@@ -1,22 +1,13 @@
-import "reflect-metadata";
-import { DataSource } from "typeorm";
+import { createConnection, getConnectionOptions } from 'typeorm';
 
-const AppDataSource = new DataSource({
-  type: "postgres",
-  host: "localhost",
-  port: 5432,
-  username: "docker",
-  password: "ignite",
-  database: "rentx",
-  synchronize: false,
-  logging: false,
-  entities: [],
-  migrations: ["./src/database/migrations/*.ts"],
-  subscribers: [],
-});
-
-export function createConnection(host = "database_ignite"): Promise<DataSource> {
-  return AppDataSource.setOptions({ host }).initialize();
+interface IOptions {
+  host: string;
 }
 
-export default AppDataSource;
+getConnectionOptions().then(options => {
+  const newOptions = options as IOptions;
+  newOptions.host = 'database'; //Essa opção deverá ser EXATAMENTE o nome dado ao service do banco de dados
+  createConnection({
+    ...options,
+  });
+});
