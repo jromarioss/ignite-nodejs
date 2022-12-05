@@ -1,6 +1,7 @@
-import { Category } from "../../entities/Category";
-import { ICategoriesRepository, ICreateCategoryDTO } from "../ICategoriesRepository";
 import { Repository, getRepository } from "typeorm";
+
+import { Category } from "@modules/cars/entities/Category";
+import { ICategoriesRepository, ICreateCategoryDTO } from "@modules/cars/repositories/ICategoriesRepository";
 
 // singleton instância de um classe uma instância global
 
