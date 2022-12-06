@@ -1,7 +1,7 @@
 import { container } from "tsyringe";
 import { Request, Response } from "express";
 
-import { ListCategoriesUseCase } from "./ListCategoriesUseCase";
+import { ListCategoriesUseCase } from "@modules/cars/useCases/listCategories/ListCategoriesUseCase";
 
 class ListCategoriesController {
 
