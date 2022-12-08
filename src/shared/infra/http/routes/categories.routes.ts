@@ -5,6 +5,9 @@ import { CreateCategoryController } from "@modules/cars/useCases/createCategory/
 import { ImportCategoryController } from "@modules/cars/useCases/importCategory/ImportCategoryController";
 import { ListCategoriesController } from "@modules/cars/useCases/listCategories/ListCategoriesController";
 
+import { ensureAuthenticated } from "@shared/infra/http/middlewares/ensureAuthenticated";
+import { ensureAdmin } from "@shared/infra/http/middlewares/ensureAdmin";
+
 const categoriesRoutes = Router(); // criar a Rota categories
 
 // configuração do multer
@@ -17,12 +20,12 @@ const importCategoryController = new ImportCategoryController();
 const listcategoriesController = new ListCategoriesController();
 
 // rota de criar categorias
-categoriesRoutes.post("/", createCategoryController.handle);
+categoriesRoutes.post("/", ensureAuthenticated, ensureAdmin, createCategoryController.handle);
 
 // rota de listar categoria
 categoriesRoutes.get("/", listcategoriesController.handle);
 
 // rota de upload de arquivo
-categoriesRoutes.post("/import", upload.single("file"), importCategoryController.handle);
+categoriesRoutes.post("/import", ensureAuthenticated, ensureAdmin, upload.single("file"), importCategoryController.handle);
 
 export { categoriesRoutes }; // exporta o categoriesRoutes
