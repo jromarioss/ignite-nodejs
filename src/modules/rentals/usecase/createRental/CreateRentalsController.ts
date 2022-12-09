@@ -1,0 +1,5 @@
+class CreateRentalsController {
+
+}
+
+export { CreateRentalsController }

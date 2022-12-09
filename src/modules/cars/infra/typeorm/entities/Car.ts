@@ -46,7 +46,7 @@ class Car {
     // name da coluna dentro da tabela de relacionamento que referencia a tablea q a gente ta
     joinColumns: [{ name: "car_id" }],
     // a outra coluna que referencia a tabela que esta colocando dentro do many to many
-    inverseJoinColumns: [{ name: "speficiation_id" }]
+    inverseJoinColumns: [{ name: "specification_id " }]
   })
   specifications: Specifications[];
 
